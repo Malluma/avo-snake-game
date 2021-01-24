@@ -10,6 +10,8 @@ let score = 0
 let intervalTime = 1000
 let speed = 0.9
 let timerId = 0
+let gameOver = document.getElementsByClassName('game-over')[0];
+
 
 function createGrid() {
     //create 100 of these elements with a for loop
@@ -29,11 +31,12 @@ createGrid()
 currentSnake.forEach(index => squares[index].classList.add('snake'))
 
 function startGame() {
+     gameOver.classList.remove('game-over-display');  
+     gameOver.classList.add('game-over'); 
     //remove the snake
     currentSnake.forEach(index => squares[index].classList.remove('snake'))
     //remove the apple
     squares[appleIndex].classList.remove('apple')
-    squares[appleIndex].textContent = '';
     clearInterval(timerId)
     currentSnake = [2,1,0]
     score = 0
@@ -55,7 +58,15 @@ function move() {
         (currentSnake[0] - width < 0 && direction === -width) || //if snake has hit top
         squares[currentSnake[0] + direction].classList.contains('snake')
     )
+    {   
+    const gameOverClone = gameOver.cloneNode();
+   
+    gameOver.classList.remove('game-over');
+    void gameOver.offsetWidth;
+    gameOver.classList.add('game-over-display');
+    
     return clearInterval(timerId)
+    }
 
     //remove last element from our currentSnake array
     const tail = currentSnake.pop()
@@ -69,7 +80,6 @@ function move() {
     if (squares[currentSnake[0]].classList.contains('apple')) {
         //remove the class of apple
         squares[appleIndex].classList.remove('apple')
-        squares[appleIndex].textContent = '';
         //grow our snake by adding class of snake to it
         squares[tail].classList.add('snake')
         //grow our snake array
@@ -81,7 +91,7 @@ function move() {
         //display our score
         scoreDisplay.textContent = score
         //speed up our snake
-        clearInterval(timerId)
+        clearInterval(timerId)  
         intervalTime = intervalTime * speed
         timerId = setInterval(move, intervalTime)
     }
@@ -94,7 +104,6 @@ function generateApple() {
         appleIndex = Math.floor(Math.random() * squares.length)
     } while (squares[appleIndex].classList.contains('snake'))
     squares[appleIndex].classList.add('apple')
-    squares[appleIndex].textContent = '🥑';
 } 
 
 // 39 is right arrow
